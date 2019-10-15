@@ -1,0 +1,39 @@
+plugins {
+    id "eu.xenit.docker" version "4.0.3"
+}
+
+configurations {
+    runtime
+}
+
+version='1.6.2'
+
+dependencies {
+    runtime group: 'org.gaul', name: 's3proxy', version: version, classifier: 'jar-with-dependencies', ext: 'jar'
+}
+
+def workingDir = "$project.buildDir/dockerbuild"
+
+task pullRuntimeDependencies(type: Copy) {
+    from configurations.runtime
+    into workingDir
+    
+    rename 's3proxy-(.+)', 's3proxy'
+}
+
+task copyResources(type: Copy) {
+    from "$project.projectDir/src/main/resources"
+    into workingDir
+}
+
+buildDockerImage.dependsOn(pullRuntimeDependencies,copyResources)
+
+dockerFile {
+    dockerFile = file("$workingDir/Dockerfile")
+    dockerBuild {
+        repository = 'hub.xenit.eu/public/s3proxy'
+        tags = ["${version}"]
+        pull = true
+        automaticTags = false
+    }
+}
