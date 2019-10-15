@@ -2,6 +2,11 @@ plugins {
     id "eu.xenit.docker" version "4.0.3"
 }
 
+repositories {
+    mavenCentral()
+    jcenter()
+}
+
 configurations {
     runtime
 }
