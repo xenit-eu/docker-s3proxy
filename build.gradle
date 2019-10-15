@@ -39,6 +39,6 @@ dockerFile {
         repository = 'hub.xenit.eu/public/s3proxy'
         tags = ["${version}"]
         pull = true
-        automaticTags = false
+//        automaticTags = false
     }
 }
